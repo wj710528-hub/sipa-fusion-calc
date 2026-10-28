@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#c9272c">
+  <meta name="description" content="融合级联计算器：根据应用场景、墙面尺寸和投射比估算投影机数量、投射距离、融合级联组合与视频素材建议。">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="./icon-192.png">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <title>融合级联计算器 V3.1</title>
+  <style>
+    :root{--brand:#c9272c;--blue:#1769aa;--orange:#ef7b22;--bg:#f2f5f9;--card:#fff;--line:#dfe6ee;--text:#202b38;--muted:#667085;--soft:#f8fafc;--shadow:0 10px 28px rgba(22,34,51,.075)}
+    *{box-sizing:border-box}html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,"PingFang SC","Microsoft YaHei",sans-serif}button,input,select{font:inherit}button{touch-action:manipulation;cursor:pointer}
+    .wrap{max-width:1120px;margin:0 auto;padding:max(12px,env(safe-area-inset-top)) 12px calc(22px + env(safe-area-inset-bottom))}.shell{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:var(--shadow)}
+    .header{display:flex;align-items:center;gap:12px;padding:15px 17px;border-bottom:1px solid var(--line);background:linear-gradient(130deg,#fff,#fbfcfe)}.logo{width:55px;height:55px;object-fit:contain;border-radius:12px;background:#fff;flex-shrink:0}.brand-copy{flex:1;min-width:0}.brand-copy h1{font-size:20px;line-height:1.2;margin:0;font-weight:900;letter-spacing:.1px}.brand-copy p{margin:5px 0 0;font-size:12px;line-height:1.4;color:var(--muted)}.version{padding:6px 10px;background:#fff0f0;color:var(--brand);border:1px solid #ffd4d4;border-radius:999px;font-size:11px;font-weight:900;white-space:nowrap}
+    .layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:13px;padding:13px}.panel{min-width:0;border:1px solid var(--line);border-radius:15px;padding:14px;background:#fff}.section-head{display:flex;align-items:center;gap:8px;margin:0 0 12px;font-size:15px;font-weight:900}.step{display:inline-flex;align-items:center;justify-content:center;width:25px;height:25px;border-radius:8px;background:#fff0f0;color:var(--brand);font-size:11px;font-weight:950}.section-title{font-size:12px;color:#344054;font-weight:850;margin:14px 0 8px}.section-title:first-of-type{margin-top:0}
+    .mode-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-bottom:12px}.mode-tab{min-height:43px;border:1px solid var(--line);border-radius:10px;background:#fff;color:#344054;font-size:11px;line-height:1.35;font-weight:850;padding:7px 5px}.mode-tab.active{background:var(--blue);color:#fff;border-color:var(--blue);box-shadow:0 5px 13px rgba(23,105,170,.16)}
+    .scene-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.scene-card{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;text-align:left;gap:4px;min-height:68px;border:1px solid var(--line);border-radius:11px;padding:10px;background:#fff;color:#273647}.scene-card b{font-size:12px;font-weight:900}.scene-card small{font-size:10px;color:var(--muted);line-height:1.35}.scene-card.active{border-color:var(--blue);background:#edf6fc;box-shadow:inset 0 0 0 1px var(--blue)}.scene-card.active small{color:#38698d}
+    .hint{font-size:11px;line-height:1.55;color:#697586;background:#f8fafc;border-left:3px solid #b9c8d6;padding:8px 10px;border-radius:0 8px 8px 0;margin-top:9px}.surface-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}.surface-card{border:1px solid var(--line);border-radius:11px;padding:9px;background:#fff;min-width:0}.surface-card.active{border-color:#b6d7ed;background:#f5fbff}.surface-head{display:flex;align-items:center;justify-content:space-between;gap:5px;margin-bottom:8px}.surface-head b{font-size:12px}.surface-state{font-size:9px;border-radius:999px;padding:3px 6px;color:#667085;background:#f0f2f5;white-space:nowrap}.surface-card.active .surface-state{color:#12609b;background:#dceefa}.counter{display:flex;align-items:center;gap:6px}.counter button{width:31px;height:32px;border:1px solid var(--line);border-radius:8px;background:#fff;color:#344054;font-weight:900;font-size:17px;line-height:1}.counter button:active{transform:scale(.97)}.counter output,.counter input{flex:1;min-width:0;text-align:center;font-weight:900;font-size:15px;border:1px solid var(--line);border-radius:8px;height:32px;background:#fff;color:#1d3348;padding:4px}.counter input{width:50px}.counter button:disabled{opacity:.35;cursor:not-allowed}.resolution-options{display:grid;grid-template-columns:1fr 1fr;gap:8px}.res-choice{min-height:53px;border:1px solid var(--line);border-radius:10px;background:#fff;color:#344054;font-size:13px;font-weight:900;padding:8px}.res-choice small{display:block;font-size:10px;font-weight:700;color:var(--muted);margin-top:3px}.res-choice.active{background:#edf6fc;border-color:var(--blue);color:#125f98;box-shadow:inset 0 0 0 1px var(--blue)}.res-choice.active small{color:#38698d}
+    .channel-entry{border:1px solid var(--line);border-radius:12px;background:#fbfcfe;padding:12px}.channel-entry label{display:block;font-size:12px;font-weight:850;color:#344054;margin-bottom:8px}.channel-entry .counter button{width:42px;height:43px;font-size:21px}.channel-entry .counter input{height:43px;font-size:18px}.field-help{font-size:11px;line-height:1.5;color:var(--muted);margin-top:8px}.actions{display:flex;gap:8px;margin-top:14px}.btn{border:0;border-radius:11px;min-height:45px;padding:10px 13px;font-size:12px;font-weight:900}.btn-primary{flex:1;background:linear-gradient(135deg,#ef852e,#de650c);color:#fff;box-shadow:0 6px 14px rgba(222,101,12,.16)}.btn-secondary{background:#f1f4f7;color:#465465;border:1px solid var(--line)}
+    .kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.kpi{border:1px solid #d8e7f1;background:#f0f7fc;border-radius:12px;padding:11px;min-width:0}.kpi.highlight{grid-column:1/-1;background:#eef8f2;border-color:#cfe8d9}.kpi label{display:block;font-size:10px;color:#536577;font-weight:850}.kpi strong{display:block;font-size:25px;line-height:1.2;margin:5px 0 3px;color:#135e95;font-weight:950;overflow-wrap:anywhere}.kpi.highlight strong{font-size:26px;color:#14613c}.kpi small{display:block;font-size:10px;line-height:1.4;color:#637181}.result-block{margin-top:13px}.block-title{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13px;font-weight:900;margin:0 0 8px}.pill{font-size:10px;color:#1769aa;background:#edf6fc;border-radius:999px;padding:4px 7px;font-weight:850;white-space:nowrap}
+    .room-diagram{position:relative;min-height:214px;border:1px solid #dbe4ec;border-radius:13px;background:linear-gradient(145deg,#f7fafc,#eaf0f5);padding:15px;overflow:hidden}.room-inner{position:relative;max-width:360px;height:182px;margin:0 auto}.wall{position:absolute;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2px;border:1px dashed #aebdca;background:rgba(255,255,255,.8);color:#788593;border-radius:7px;text-align:center;padding:4px;font-size:10px;font-weight:850}.wall b{font-size:10px}.wall.active{background:#e4f2fc;border:1px solid #80b8df;color:#125e95;box-shadow:0 2px 5px rgba(23,105,170,.07)}.wall.back{left:22%;right:22%;top:0;height:34px}.wall.front{left:22%;right:22%;bottom:0;height:34px}.wall.left{left:0;top:22%;bottom:22%;width:18%}.wall.right{right:0;top:22%;bottom:22%;width:18%}.room-center{position:absolute;left:21%;right:21%;top:25%;bottom:25%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#697989;font-size:11px;line-height:1.5}.floor-tag,.ceiling-tag{position:absolute;left:50%;transform:translateX(-50%);border-radius:999px;padding:4px 9px;font-size:10px;font-weight:850;white-space:nowrap;background:#fff;border:1px solid #d5dfe8;color:#7b8794}.floor-tag{top:39%}.ceiling-tag{top:60%}.floor-tag.active,.ceiling-tag.active{background:#fff0d9;border-color:#f3c17f;color:#8a4c08}.diagram-note{font-size:10px;color:#7a8795;margin-top:6px;line-height:1.45}
+    .channel-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.channel-item{display:flex;gap:8px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:8px;min-width:0;background:#fff}.ch-badge{flex-shrink:0;display:flex;align-items:center;justify-content:center;min-width:37px;height:31px;border-radius:8px;background:#edf6fc;color:#12609b;font-size:10px;font-weight:950}.channel-copy{min-width:0}.channel-copy b{display:block;font-size:11px;line-height:1.35;overflow-wrap:anywhere}.channel-copy small{display:block;font-size:10px;color:var(--muted);margin-top:2px}.cascade-list{display:grid;gap:8px}.cascade-unit{border:1px solid var(--line);border-radius:11px;overflow:hidden;background:#fff}.cascade-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 10px;background:#f7f9fb;border-bottom:1px solid var(--line)}.cascade-head b{font-size:12px}.cascade-head span{font-size:10px;font-weight:850;color:#1769aa;background:#eaf4fb;border-radius:999px;padding:4px 7px}.cascade-outputs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;padding:8px}.cascade-output{border:1px solid #e6edf3;border-radius:8px;padding:7px;font-size:10px;line-height:1.45;min-width:0}.cascade-output strong{display:block;color:#1769aa;font-size:10px}.cascade-output span{display:block;color:#465465;overflow-wrap:anywhere}.empty-state{border:1px dashed #cbd5df;border-radius:11px;padding:18px;text-align:center;color:#7b8794;font-size:12px;line-height:1.6;background:#fafbfd}.copy-status{font-size:11px;color:#1769aa;font-weight:800;align-self:center}.plan-actions{display:flex;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap}.plan-actions .btn{min-height:40px}.plan-text{font-size:11px;line-height:1.65;white-space:pre-line;color:#344054;background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:10px;margin-top:9px}
+    details.engineering{margin-top:13px;border:1px solid var(--line);border-radius:11px;overflow:hidden}details.engineering summary{cursor:pointer;list-style:none;padding:11px 12px;background:#f8fafc;font-size:12px;font-weight:900}details.engineering summary::-webkit-details-marker{display:none}details.engineering summary:after{content:'＋';float:right;color:#1769aa;font-weight:900}details.engineering[open] summary:after{content:'－'}.engineering-body{padding:11px}.fields{display:grid;grid-template-columns:1fr 1fr;gap:9px}.field label{display:block;font-size:11px;font-weight:800;color:#536171;margin-bottom:5px}.field input,.field select{width:100%;min-height:39px;padding:8px 9px;border:1px solid var(--line);border-radius:9px;background:#fff;color:#273647}.canvas-result{margin-top:9px;padding:10px;border-radius:9px;background:#edf6fc;border:1px solid #d2e6f4;color:#145d91;font-size:13px;font-weight:900;line-height:1.55}.canvas-note{margin-top:7px;font-size:10px;line-height:1.5;color:#7a8795}.notice{margin-top:12px;padding:10px 11px;border:1px solid #f0dfbc;border-radius:10px;background:#fff9ed;color:#66512c;font-size:10.5px;line-height:1.6}.footer{text-align:center;padding:0 14px 15px;font-size:10px;color:#7c8794}
+    .demand-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.demand-fields .field input,.demand-fields .field select{min-height:40px}.demand-intro{font-size:11px;line-height:1.55;color:#5c6a79;background:#f4f8fb;border:1px solid #e0e9f0;border-radius:10px;padding:10px;margin-bottom:11px}.demand-results-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.orientation-card{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff;min-width:0}.orientation-card.recommended{border-color:#7ab6dc;box-shadow:inset 0 0 0 1px #7ab6dc}.orientation-head{padding:10px 11px;background:#f7f9fb;border-bottom:1px solid var(--line)}.orientation-card.recommended .orientation-head{background:#edf7fd}.orientation-head b{font-size:13px}.orientation-head small{display:block;font-size:10px;color:var(--muted);line-height:1.4;margin-top:4px}.orientation-body{padding:10px}.orientation-main{font-size:22px;font-weight:950;color:#1769aa;line-height:1.2;margin-bottom:4px}.orientation-sub{font-size:11px;line-height:1.5;color:#475668}.orientation-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:9px}.mini-stat{border:1px solid #e6edf3;border-radius:8px;padding:7px;min-width:0}.mini-stat span{display:block;font-size:9px;color:#667085;line-height:1.35}.mini-stat b{display:block;font-size:11px;line-height:1.4;color:#24394c;margin-top:3px;overflow-wrap:anywhere}.demand-summary{border:1px solid #d9e7f1;background:#f4f9fc;border-radius:10px;padding:10px;font-size:11px;line-height:1.6;color:#34495c}.wall-breakdown{display:grid;gap:7px}.wall-row{display:flex;justify-content:space-between;align-items:center;gap:8px;border:1px solid var(--line);border-radius:9px;padding:9px 10px;font-size:11px}.wall-row b{color:#1769aa;white-space:nowrap}.demand-note{font-size:10.5px;line-height:1.6;color:#66512c;background:#fff9ed;border:1px solid #f0dfbc;border-radius:10px;padding:10px;margin-top:10px}.media-kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.media-kpi{border:1px solid #d8e7f1;background:#f0f7fc;border-radius:11px;padding:10px;min-width:0}.media-kpi.highlight{background:#eef8f2;border-color:#cfe8d9}.media-kpi label{display:block;font-size:10px;color:#536577;font-weight:850}.media-kpi strong{display:block;font-size:20px;line-height:1.3;margin-top:5px;color:#135e95;overflow-wrap:anywhere}.media-kpi.highlight strong{color:#14613c}.media-kpi small{display:block;font-size:10px;line-height:1.45;color:#637181;margin-top:3px}.media-wall-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:9px}.media-wall{border:1px solid var(--line);border-radius:9px;padding:9px;background:#fff;font-size:11px;line-height:1.45}.media-wall b{display:block;color:#1769aa;margin-bottom:3px}.media-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.media-option{border:1px solid var(--line);border-radius:11px;overflow:hidden;background:#fff;min-width:0}.media-option-head{padding:9px 10px;background:#f7f9fb;border-bottom:1px solid var(--line);font-size:12px;font-weight:900}.media-option-body{padding:10px}.media-option strong{display:block;font-size:18px;color:#1769aa;overflow-wrap:anywhere}.media-option p{margin:5px 0 0;font-size:10px;line-height:1.55;color:#667085}.media-note{font-size:10.5px;line-height:1.6;color:#66512c;background:#fff9ed;border:1px solid #f0dfbc;border-radius:10px;padding:10px;margin-top:10px}
+    .media-rule-list{margin:0;padding-left:18px;font-size:11px;line-height:1.65;color:#344054}.media-rule-list li{margin:0 0 7px}.media-rule-list li:last-child{margin-bottom:0}.media-spec-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:9px}.media-spec-card{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;min-width:0}.media-spec-card h4{font-size:11px;margin:0;padding:9px 10px;background:#f7f9fb;border-bottom:1px solid var(--line)}.media-spec-card p{font-size:10.5px;line-height:1.55;color:#536171;margin:0;padding:9px 10px}.media-spec-card b{color:#1769aa}.media-rule-foot{font-size:10.5px;line-height:1.6;color:#66512c;background:#fff9ed;border:1px solid #f0dfbc;border-radius:9px;padding:9px 10px;margin-top:9px}
+    .hidden{display:none!important}
+    @media(max-width:850px){.layout{grid-template-columns:1fr}.result-panel{order:2}.input-panel{order:1}}
+    @media(max-width:480px){.mode-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}.media-pair{grid-template-columns:1fr}.demand-fields{grid-template-columns:1fr 1fr}.demand-results-grid{grid-template-columns:1fr}.wrap{padding-left:7px;padding-right:7px}.header{padding:12px;gap:9px}.logo{width:47px;height:47px}.brand-copy h1{font-size:17px}.brand-copy p{font-size:10px}.version{font-size:10px;padding:5px 7px}.layout{padding:8px;gap:9px}.panel{padding:10px}.scene-grid{gap:6px}.scene-card{min-height:64px;padding:8px}.scene-card b{font-size:11px}.surface-grid{gap:6px}.surface-card{padding:8px}.kpi strong{font-size:23px}.kpi.highlight strong{font-size:24px}.channel-list{grid-template-columns:1fr}.room-diagram{min-height:205px;padding:10px}.room-inner{height:180px}.fields{grid-template-columns:1fr 1fr}.plan-actions{align-items:stretch}.plan-actions .btn{flex:1}.copy-status{width:100%}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <main class="shell">
+      <header class="header">
+        <img class="logo" src="./icon-192.png" alt="Sipa">
+        <div class="brand-copy"><h1>融合级联计算器</h1><p>应用场景 · 尺寸反推 · 素材分辨率 · 级联组合</p></div>
+        <span class="version">V3.1</span>
+      </header>
+      <div class="layout">
+        <section class="panel input-panel">
+          <h2 class="section-head"><span class="step">01</span> 项目配置</h2>
+          <div class="mode-tabs" role="tablist" aria-label="选型方式">
+            <button class="mode-tab active" id="modeSceneBtn" type="button" onclick="setMode('scene')">按应用场景</button>
+            <button class="mode-tab" id="modeChannelBtn" type="button" onclick="setMode('channel')">按通道数</button>
+            <button class="mode-tab" id="modeDemandBtn" type="button" onclick="setMode('demand')">按墙面尺寸反推</button>
+            <button class="mode-tab" id="modeMediaBtn" type="button" onclick="setMode('media')">视频素材分辨率</button>
+          </div>
+          <div id="sceneMode">
+            <div class="section-title">选择应用场景</div>
+            <div class="scene-grid">
+              <button class="scene-card" data-scene="wide" type="button" onclick="setScene('wide')"><b>单面超宽屏</b><small>单面画面，多机拼接</small></button>
+              <button class="scene-card" data-scene="l" type="button" onclick="setScene('l')"><b>L形双墙</b><small>前墙 + 左墙</small></button>
+              <button class="scene-card" data-scene="u" type="button" onclick="setScene('u')"><b>U形三面墙</b><small>前墙 + 左右墙</small></button>
+              <button class="scene-card" data-scene="four" type="button" onclick="setScene('four')"><b>四面墙沉浸空间</b><small>前后左右四面墙</small></button>
+              <button class="scene-card active" data-scene="floor" type="button" onclick="setScene('floor')"><b>四面墙 + 地面</b><small>五面沉浸式投影</small></button>
+              <button class="scene-card" data-scene="six" type="button" onclick="setScene('six')"><b>四面墙 + 地面 + 顶面</b><small>六面沉浸空间</small></button>
+              <button class="scene-card" data-scene="custom" type="button" onclick="setScene('custom')"><b>自定义投影面</b><small>手动调整每个面的数量</small></button>
+            </div>
+            <div class="hint">场景预设仅用于快速开始。每个投影面默认数量均可调整；一个投影面使用多台投影机时，请按实际投影机数量增加。</div>
+            <div class="section-title">各投影面投影机数量</div>
+            <div class="surface-grid" id="surfaceGrid"></div>
+          </div>
+          <div id="channelMode" class="hidden">
+            <div class="section-title">输入项目所需输出通道数</div>
+            <div class="channel-entry">
+              <label for="channelCount">总输出通道数（1–32路）</label>
+              <div class="counter"><button type="button" aria-label="减少通道" onclick="adjustChannelCount(-1)">−</button><input id="channelCount" type="number" inputmode="numeric" min="1" max="32" step="1" value="5"><button type="button" aria-label="增加通道" onclick="adjustChannelCount(1)">＋</button></div>
+              <div class="field-help">适合已经确定投影机总数量、暂时不需要细分投影面的项目。此模式按“投影机1、投影机2……”显示通道用途。</div>
+            </div>
+          </div>
+          <div id="demandMode" class="hidden">
+            <div class="section-title">输入客户的墙面尺寸</div>
+            <div class="demand-intro">适用于客户先给墙面尺寸、再反推投影机数量的场景。横投与竖投会同时计算比较；不绑定具体投影机型号。</div>
+            <div class="demand-fields">
+              <div class="field"><label for="wallCount">相同尺寸的墙面数量</label><select id="wallCount" onchange="calculateDemand()"><option value="1">1面墙</option><option value="2">2面墙</option><option value="3" selected>3面墙</option><option value="4">4面墙</option><option value="5">5面墙</option><option value="6">6面墙</option></select></div>
+              <div class="field"><label for="wallWidth">每面墙宽度（m）</label><input id="wallWidth" type="number" min="0.5" max="100" step="0.01" value="3.95" inputmode="decimal" oninput="calculateDemand()"></div>
+              <div class="field"><label for="wallHeight">每面墙高度（m）</label><input id="wallHeight" type="number" min="0.5" max="20" step="0.01" value="3.3" inputmode="decimal" oninput="calculateDemand()"></div>
+              <div class="field"><label for="throwRatio">投射比（由销售输入）</label><input id="throwRatio" type="number" min="0.1" max="5" step="0.01" placeholder="例如 0.8" inputmode="decimal" oninput="calculateDemand()"></div>
+              <div class="field"><label for="overlapPct">相邻画面重叠率（%）</label><input id="overlapPct" type="number" min="0" max="40" step="1" value="15" inputmode="numeric" oninput="calculateDemand()"></div>
+              <div class="field"><label for="targetCoverage">目标墙宽覆盖率</label><select id="targetCoverage" onchange="calculateDemand()"><option value="90" selected>至少 90%（允许留边）</option><option value="95">至少 95%</option><option value="100">尽量覆盖 100%</option></select></div>
+            </div>
+            <div class="hint">投射比留空时，仍可计算投影机数量、画面尺寸与融合级联，但不显示投射距离。投射距离按“画面宽度 × 投射比”粗算，须以所选机型的实际镜头参数复核。</div>
+          </div>
+          <div id="mediaMode" class="hidden">
+            <div class="section-title">视频素材画布参数</div>
+            <div class="demand-intro">给视频制作公司使用。根据每面墙的投影机数量、单通道分辨率、横投/竖投方向及融合重叠率，估算单墙有效素材画布与多墙展开画布。</div>
+            <div class="demand-fields">
+              <div class="field"><label for="mediaWallCount">同尺寸墙面数量</label><select id="mediaWallCount" onchange="calculateMedia()"><option value="1">1面墙</option><option value="2">2面墙</option><option value="3" selected>3面墙</option><option value="4">4面墙</option><option value="5">5面墙</option><option value="6">6面墙</option></select></div>
+              <div class="field"><label for="mediaProjectorsPerWall">每面墙投影机数量</label><input id="mediaProjectorsPerWall" type="number" min="1" max="16" step="1" value="2" inputmode="numeric" oninput="calculateMedia()"></div>
+              <div class="field"><label for="mediaOrientation">投影方向</label><select id="mediaOrientation" onchange="calculateMedia()"><option value="horizontal">横投（1920宽）</option><option value="vertical" selected>竖投（旋转90°）</option></select></div>
+              <div class="field"><label for="mediaOverlapPct">相邻画面重叠率（%）</label><input id="mediaOverlapPct" type="number" min="0" max="40" step="1" value="15" inputmode="numeric" oninput="calculateMedia()"></div>
+            </div>
+            <div class="hint">重叠率按单台投影机在拼接方向上的像素宽度计算。素材分辨率是按“每路输出像素减去融合重叠”估算的逻辑画布，不代表播放服务器输入分辨率一定等于该数值。</div>
+          </div>
+          <div class="section-title">单通道输出分辨率</div>
+          <div class="resolution-options">
+            <button class="res-choice" id="res1080" type="button" onclick="setResolution('1080')">1920 × 1080<small>1080P</small></button>
+            <button class="res-choice active" id="res1200" type="button" onclick="setResolution('1200')">1920 × 1200<small>WUXGA</small></button>
+          </div>
+          <div class="hint">这里选择的是每一路融合输出的分辨率，不是整个项目的总画布分辨率。总画布还取决于投影排列、融合重叠和播放系统设置。</div>
+          <div class="actions"><button class="btn btn-primary" type="button" onclick="calculate()">更新选型结果</button><button class="btn btn-secondary" type="button" onclick="resetAll()">重置</button></div>
+        </section>
+        <section class="panel result-panel">
+          <h2 class="section-head"><span class="step">02</span> 选型结果</h2>
+          <div id="legacyResults">
+          <div class="kpis">
+            <div class="kpi"><label>投影机 / 输出通道</label><strong id="totalChannels">5 路</strong><small>按每台投影机对应1路输出计算</small></div>
+            <div class="kpi"><label>融合单元数量</label><strong id="unitCount">3 个</strong><small>按单元最多承载2路输出计算</small></div>
+            <div class="kpi highlight"><label>推荐级联组合</label><strong id="topology">2 + 2 + 1</strong><small id="topologyNote">双通道优先，剩余1路单独配置</small></div>
+            <div class="kpi"><label>单通道输出分辨率</label><strong id="resolutionValue">1920×1200</strong><small>各输出通道按所选分辨率显示</small></div>
+          </div>
+          <div class="result-block" id="roomBlock">
+            <div class="block-title">应用场景示意 <span class="pill" id="scenePill">四面墙 + 地面</span></div>
+            <div class="room-diagram"><div class="room-inner" id="roomInner"></div></div>
+            <div class="diagram-note">示意图仅表示投影面与数量，不代表实际投射方向、画面覆盖范围或施工尺寸。</div>
+          </div>
+          <div class="result-block">
+            <div class="block-title">输出通道分配 <span class="pill" id="channelPill">5路输出</span></div>
+            <div class="channel-list" id="channelList"></div>
+          </div>
+          <div class="result-block">
+            <div class="block-title">融合单元级联结构 <span class="pill" id="unitPill">3个单元</span></div>
+            <div class="cascade-list" id="cascadeList"></div>
+          </div>
+          <div class="plan-actions"><button class="btn btn-primary" type="button" onclick="copyPlan()">复制选型方案</button><button class="btn btn-secondary" type="button" onclick="downloadPlan()">下载 TXT 方案</button><span class="copy-status" id="copyStatus" aria-live="polite"></span></div>
+          <div class="plan-text" id="planText"></div>
+          <details class="engineering">
+            <summary>工程补充：线性画布分辨率估算</summary>
+            <div class="engineering-body">
+              <div class="fields">
+                <div class="field"><label for="canvasAxis">投影排列</label><select id="canvasAxis" onchange="updateCanvasEstimate()"><option value="horizontal">横向单排</option><option value="vertical">纵向单列</option></select></div>
+                <div class="field"><label for="overlapPx">相邻画面重叠（像素）</label><input id="overlapPx" type="number" min="0" max="1919" step="1" value="0" inputmode="numeric" oninput="updateCanvasEstimate()"></div>
+              </div>
+              <div class="canvas-result" id="canvasResult">待计算</div>
+              <div class="canvas-note">仅估算所有投影机横向单排或纵向单列时的线性画布。多墙、地面、顶面或异形空间不能直接用此结果代表最终素材画布；实际画布须结合融合软件、播放服务器及项目映射关系确认。</div>
+            </div>
+          </details>
+          <div class="notice"><b>选型规则：</b>1路或2路输出均按1个融合单元计算；超过2路时，按“2路优先、剩余1路补足”生成级联组合，例如3路为2+1、5路为2+2+1、6路为2+2+2。此工具不指定具体产品型号。实际输入输出接口、级联方式、同步要求及信号源能力，仍需按最终产品规格和项目设计核对。</div>
+          </div>
+          <div id="demandResults" class="hidden">
+            <div class="result-block"><div class="block-title">客户需求摘要 <span class="pill">尺寸反推</span></div><div class="demand-summary" id="demandSummary"></div></div>
+            <div class="result-block"><div class="block-title">横投 / 竖投方案对比 <span class="pill">理论粗算</span></div><div class="demand-results-grid" id="demandCompare"></div></div>
+            <div class="result-block"><div class="block-title">推荐方案的逐墙通道分配</div><div class="wall-breakdown" id="demandWallBreakdown"></div></div>
+            <div class="result-block"><div class="block-title">视频素材分辨率建议 <span class="pill">自动计算</span></div><div class="media-pair" id="demandMediaResults"></div><div class="canvas-note">展开画布假设所有同尺寸墙面按顺序线性展开，不包含墙角的几何补偿或额外裁切。制作公司应先确认播放器与融合软件采用“每墙独立素材”还是“单张展开全景素材”。</div><div class="hint"><b>级联素材提醒：</b>各设备素材统一帧率、总帧数、起止时间与播放列表；建议先用 25fps CFR、MP4/H.264、8-bit yuv420p，再按冷启动、切换、循环场景实测同步。</div></div>
+            <div class="plan-actions"><button class="btn btn-primary" type="button" onclick="copyPlan()">复制选型方案</button><button class="btn btn-secondary" type="button" onclick="downloadPlan()">下载 TXT 方案</button><span class="copy-status" id="demandCopyStatus" aria-live="polite"></span></div>
+            <div class="plan-text" id="demandPlanText"></div>
+            <div class="demand-note"><b>现场复核提醒：</b>结果仅作理论粗算。须复核实际投射比与镜头变焦范围、安装距离、机身与吊架空间、投影机竖装和散热要求、融合器旋转映射能力、画面重叠及内容比例。若各面墙尺寸不同，应分别计算各墙，不能直接套用相同配置。</div>
+          </div>
+          <div id="mediaResults" class="hidden">
+            <div class="result-block"><div class="block-title">素材分辨率计算结果 <span class="pill">理论像素画布</span></div><div id="mediaSummary" class="demand-summary"></div></div>
+            <div class="result-block"><div class="media-kpis"><div class="media-kpi"><label>单面墙素材画布</label><strong id="mediaPerWall">2220 × 1920</strong><small id="mediaPerWallNote">2台竖投，重叠180px</small></div><div class="media-kpi highlight"><label>多墙展开总画布</label><strong id="mediaUnfolded">6660 × 1920</strong><small id="mediaUnfoldedNote">3面墙连续展开，不含墙角补偿</small></div><div class="media-kpi"><label>展开画布宽高比</label><strong id="mediaAspect">3.469:1</strong><small>用于素材画布比例参考</small></div><div class="media-kpi"><label>总画布像素量</label><strong id="mediaMegapixels">12.79 MP</strong><small>未压缩像素数量，不代表视频文件大小</small></div></div></div>
+            <div class="result-block"><div class="block-title">各墙素材交付建议 <span class="pill" id="mediaWallPill">3面墙</span></div><div class="media-wall-list" id="mediaWallList"></div></div>
+            <div class="hint"><b>级联播放关键：</b>各设备素材保持同帧率、同总帧数、同起止时间和播放列表顺序。优先从统一时间轴制作；编码一致不等于硬件帧同步。</div>
+            <details class="engineering">
+              <summary>级联视频素材规范（简版）</summary>
+              <div class="engineering-body">
+                <ul class="media-rule-list">
+                  <li><b>统一时间轴：</b>左右机或各象限素材应来自同一源时间轴，保持帧率、总帧数、时长、起止点及播放列表顺序一致；不要混用 25fps 与 30fps。</li>
+                  <li><b>统一编码：</b>优先 MP4 / H.264、25fps 恒定帧率（CFR）、逐行、yuv420p 8-bit；同组素材尽量使用相同编码设置和关键帧位置。</li>
+                  <li><b>降低解码复杂度：</b>若级联播放卡顿，先用低复杂度编码参数做对照测试，并核对实际文件属性；不要只改文件名或只凭编码命令判断素材合格。</li>
+                  <li><b>分阶段验收：</b>先单机连续播放，再测试双机冷启动、同步起播、文件切换与循环；记录卡顿时间点和异常次数。</li>
+                </ul>
+                <div class="media-spec-grid">
+                  <div class="media-spec-card"><h4>1080P 双通道 / 2+2 一字形</h4><p>单机素材画布参考 <b>3840×1080</b>；内置存储视频码率目标 <b>12–14 Mbps</b>，USB 目标 <b>10–12 Mbps</b> 且须单独复验；GOP50（约2秒），连续 B 帧不超过2帧。</p></div>
+                  <div class="media-spec-card"><h4>4K 田字形 / 2+2 级联</h4><p>专项候选画布 <b>3840×2160</b>、H.264 Level 5.1、25fps CFR；目标码率约 <b>10 Mbps</b>、VBV maxrate 12 Mbps、GOP50、B帧0、参考帧1。以上是阶段测试候选值，不是通用认证标准。</p></div>
+                </div>
+                <div class="media-rule-foot"><b>注意：</b>不同分辨率、设备型号、固件和 USB / 内置存储路径须分别复验。素材参数相同不代表已实现零卡顿、无缝切换或帧精确同步；1920×1200 样机应单独验证。</div>
+              </div>
+            </details>
+            <div class="plan-actions"><button class="btn btn-primary" type="button" onclick="copyPlan()">复制素材参数</button><button class="btn btn-secondary" type="button" onclick="downloadPlan()">下载 TXT 说明</button><span class="copy-status" id="mediaCopyStatus" aria-live="polite"></span></div>
+            <div class="plan-text" id="mediaPlanText"></div>
+            <div class="media-note"><b>重要说明：</b>此结果是理论有效素材画布。实际播放服务器输入分辨率、视频编码规格、帧率、色彩格式、墙角画面映射与融合重叠区域，必须与融合软件、播放器及内容制作流程共同确认。不要未经确认就把展开画布直接当作播放器输出分辨率。</div>
+          </div>
+        </section>
+      </div>
+      <div class="footer">Sipa融合系统工程选型辅助工具 · Powered by Sipa · V3.1</div>
+    </main>
+  </div>
+<script>
+  const SURFACES = [
+    {key:'front',name:'前墙 / 单面屏',short:'前墙',desc:'正前方投影面'},
+    {key:'right',name:'右墙',short:'右墙',desc:'右侧投影面'},
+    {key:'back',name:'后墙',short:'后墙',desc:'后方投影面'},
+    {key:'left',name:'左墙',short:'左墙',desc:'左侧投影面'},
+    {key:'floor',name:'地面',short:'地面',desc:'地面投影面'},
+    {key:'ceiling',name:'顶面',short:'顶面',desc:'顶部投影面'}
+  ];
+  const SCENES = {
+    wide:{name:'单面超宽屏',counts:{front:2,right:0,back:0,left:0,floor:0,ceiling:0}},
+    l:{name:'L形双墙',counts:{front:1,right:0,back:0,left:1,floor:0,ceiling:0}},
+    u:{name:'U形三面墙',counts:{front:1,right:1,back:0,left:1,floor:0,ceiling:0}},
+    four:{name:'四面墙沉浸空间',counts:{front:1,right:1,back:1,left:1,floor:0,ceiling:0}},
+    floor:{name:'四面墙 + 地面',counts:{front:1,right:1,back:1,left:1,floor:1,ceiling:0}},
+    six:{name:'四面墙 + 地面 + 顶面',counts:{front:1,right:1,back:1,left:1,floor:1,ceiling:1}},
+    custom:{name:'自定义投影面',counts:{front:0,right:0,back:0,left:0,floor:0,ceiling:0}}
+  };
+  const DEFAULT_COUNTS = {...SCENES.floor.counts};
+  let currentMode='scene';
+  let currentScene='floor';
+  let currentResolution='1200';
+  let surfaceCounts={...DEFAULT_COUNTS};
+  let channelCount=5;
+  let lastPlan='';
+
+  function setMode(mode){
+    currentMode=mode;
+    document.getElementById('sceneMode').classList.toggle('hidden',mode!=='scene');
+    document.getElementById('channelMode').classList.toggle('hidden',mode!=='channel');
+    document.getElementById('demandMode').classList.toggle('hidden',mode!=='demand');
+    document.getElementById('mediaMode').classList.toggle('hidden',mode!=='media');
+    document.getElementById('modeSceneBtn').classList.toggle('active',mode==='scene');
+    document.getElementById('modeChannelBtn').classList.toggle('active',mode==='channel');
+    document.getElementById('modeDemandBtn').classList.toggle('active',mode==='demand');
+    document.getElementById('modeMediaBtn').classList.toggle('active',mode==='media');
+    document.getElementById('legacyResults').classList.toggle('hidden',mode==='demand'||mode==='media');
+    document.getElementById('demandResults').classList.toggle('hidden',mode!=='demand');
+    document.getElementById('mediaResults').classList.toggle('hidden',mode!=='media');
+    if(mode==='channel') channelCount=Math.max(1,Math.min(32,getSurfaceTotal()||channelCount||1));
+    document.getElementById('channelCount').value=channelCount;
+    if(mode==='demand') calculateDemand(); else if(mode==='media') calculateMedia(); else calculate();
+  }
+  function setScene(scene){
+    currentScene=scene;
+    surfaceCounts={...SCENES[scene].counts};
+    document.querySelectorAll('[data-scene]').forEach(el=>el.classList.toggle('active',el.dataset.scene===scene));
+    renderSurfaceControls();
+    calculate();
+  }
+  function setResolution(value){
+    currentResolution=value;
+    document.getElementById('res1080').classList.toggle('active',value==='1080');
+    document.getElementById('res1200').classList.toggle('active',value==='1200');
+    calculate();
+  }
+  function adjustSurface(key,delta){
+    surfaceCounts[key]=Math.max(0,Math.min(32,(surfaceCounts[key]||0)+delta));
+    if(currentScene!=='custom' && surfaceCounts[key]!==SCENES[currentScene].counts[key]) currentScene='custom';
+    document.querySelectorAll('[data-scene]').forEach(el=>el.classList.toggle('active',el.dataset.scene===currentScene));
+    renderSurfaceControls();
+    calculate();
+  }
+  function adjustChannelCount(delta){
+    channelCount=Math.max(1,Math.min(32,(parseInt(document.getElementById('channelCount').value,10)||1)+delta));
+    document.getElementById('channelCount').value=channelCount;
+    calculate();
+  }
+  function renderSurfaceControls(){
+    const root=document.getElementById('surfaceGrid');
+    root.innerHTML=SURFACES.map(s=>{
+      const count=surfaceCounts[s.key]||0;
+      return `<div class="surface-card ${count>0?'active':''}"><div class="surface-head"><b>${s.name}</b><span class="surface-state">${count>0?'已启用':'未启用'}</span></div><div class="counter"><button type="button" aria-label="减少${s.name}投影机" ${count<=0?'disabled':''} onclick="adjustSurface('${s.key}',-1)">−</button><output aria-label="${s.name}投影机数量">${count}</output><button type="button" aria-label="增加${s.name}投影机" ${count>=32?'disabled':''} onclick="adjustSurface('${s.key}',1)">＋</button></div></div>`;
+    }).join('');
+  }
+  function getSurfaceTotal(){return SURFACES.reduce((sum,s)=>sum+(surfaceCounts[s.key]||0),0)}
+  function getResolution(){return currentResolution==='1080'?{w:1920,h:1080,label:'1920×1080'}:{w:1920,h:1200,label:'1920×1200'}}
+  function getChannels(){
+    const list=[];
+    if(currentMode==='channel'){
+      const count=Math.max(1,Math.min(32,parseInt(document.getElementById('channelCount').value,10)||channelCount||1));
+      for(let i=1;i<=count;i++) list.push({num:i,surface:`投影机${i}`,surfaceKey:'custom',projector:i});
+      return list;
+    }
+    let n=0;
+    SURFACES.forEach(s=>{
+      const count=surfaceCounts[s.key]||0;
+      for(let i=1;i<=count;i++){
+        n++;
+        list.push({num:n,surface:count>1?`${s.short} · 投影机${i}`:`${s.short}投影机`,surfaceKey:s.key,projector:i});
+      }
+    });
+    return list;
+  }
+  function getGroups(channels){
+    const groups=[];
+    for(let i=0;i<channels.length;i+=2) groups.push(channels.slice(i,i+2));
+    return groups;
+  }
+  function renderRoomDiagram(){
+    const root=document.getElementById('roomInner');
+    const count=(key)=>surfaceCounts[key]||0;
+    const single=currentMode==='scene' && currentScene==='wide';
+    const wall=(key,cls,label)=>{
+      const c=count(key); const active=c>0 && currentMode==='scene';
+      return `<div class="wall ${cls} ${active?'active':''}"><span>${single && key==='front'?'单面屏 / 前墙':label}</span><b>${active?c+'台':'—'}</b></div>`;
+    };
+    if(currentMode==='channel'){
+      root.innerHTML='<div class="room-center" style="inset:8% 5%;font-size:12px"><b>自定义通道配置</b><br>已按总通道数生成输出分配<br>当前不指定具体投影面</div>';
+      return;
+    }
+    root.innerHTML=wall('back','back','后墙')+wall('left','left','左墙')+wall('right','right','右墙')+wall('front','front','前墙')+
+      `<div class="room-center"><b>${SCENES[currentScene].name}</b><br>投影面示意<br>非施工尺寸图</div>`+
+      `<div class="floor-tag ${count('floor')>0?'active':''}">地面：${count('floor')>0?count('floor')+'台':'未启用'}</div>`+
+      `<div class="ceiling-tag ${count('ceiling')>0?'active':''}">顶面：${count('ceiling')>0?count('ceiling')+'台':'未启用'}</div>`;
+  }
+  function buildPlan(channels,groups,total){
+    const res=getResolution();
+    const scene=currentMode==='scene'?SCENES[currentScene].name:'按总通道数自定义';
+    const topology=groups.map(g=>g.length).join('+')||'—';
+    const map=channels.map(c=>`CH${c.num} → ${c.surface}`).join('\n');
+    return `Sipa融合器选型方案\n应用场景：${scene}\n投影机数量：${total}台\n融合输出通道：${total}路\n单通道输出分辨率：${res.label}\n推荐级联组合：${topology}\n融合单元数量：${groups.length}个（不指定具体型号）\n\n通道分配：\n${map||'尚未配置输出通道'}\n\n选型说明：每台投影机对应1路输出；1路或2路按1个融合单元计算，超过2路时按双通道优先、剩余1路补足的方式级联。总画布分辨率需结合排列方式、重叠像素、融合软件及播放系统另行确认。实际接口与级联能力以最终产品规格和项目设计为准。`;
+  }
+  function calculate(){
+    if(currentMode==='demand'){calculateDemand();return;}
+    if(currentMode==='media'){calculateMedia();return;}
+    if(currentMode==='channel'){
+      const raw=parseInt(document.getElementById('channelCount').value,10);
+      if(!Number.isFinite(raw)){channelCount=1;document.getElementById('channelCount').value=1;}
+      else {channelCount=Math.max(1,Math.min(32,raw));document.getElementById('channelCount').value=channelCount;}
+    }
+    const channels=getChannels();
+    const total=channels.length;
+    const groups=getGroups(channels);
+    const topology=groups.map(g=>g.length).join(' + ')||'待配置';
+    const res=getResolution();
+    document.getElementById('totalChannels').textContent=total+' 路';
+    document.getElementById('unitCount').textContent=groups.length+' 个';
+    document.getElementById('topology').textContent=topology;
+    document.getElementById('topologyNote').textContent=total>2?'双通道优先，剩余1路单独配置':total===2?'2路输出由1个融合单元承载':total===1?'1路输出由1个融合单元承载':'请至少配置1路输出';
+    document.getElementById('resolutionValue').textContent=res.label;
+    document.getElementById('channelPill').textContent=total+'路输出';
+    document.getElementById('unitPill').textContent=groups.length+'个单元';
+    document.getElementById('scenePill').textContent=currentMode==='scene'?SCENES[currentScene].name:'自定义通道数';
+    document.getElementById('roomBlock').classList.toggle('hidden',false);
+    renderRoomDiagram();
+    const channelList=document.getElementById('channelList');
+    const cascadeList=document.getElementById('cascadeList');
+    if(total===0){
+      channelList.innerHTML='<div class="empty-state" style="grid-column:1/-1">当前没有启用投影面。请将至少一个投影面的投影机数量设置为1台或以上，系统才能生成选型结果。</div>';
+      cascadeList.innerHTML='<div class="empty-state">暂无级联结构</div>';
+    } else {
+      channelList.innerHTML=channels.map(c=>`<div class="channel-item"><span class="ch-badge">CH${c.num}</span><div class="channel-copy"><b>${c.surface}</b><small>输出 ${res.label}</small></div></div>`).join('');
+      cascadeList.innerHTML=groups.map((g,i)=>`<div class="cascade-unit"><div class="cascade-head"><b>融合单元 ${String.fromCharCode(65+i)}</b><span>${g.length}路输出</span></div><div class="cascade-outputs">${g.map(c=>`<div class="cascade-output"><strong>CH${c.num} · ${res.label}</strong><span>→ ${c.surface}</span></div>`).join('')}</div></div>`).join('');
+    }
+    lastPlan=buildPlan(channels,groups,total);
+    document.getElementById('planText').textContent=lastPlan;
+    updateCanvasEstimate();
+  }
+  function formatMeters(value){
+    if(!Number.isFinite(value)) return '—';
+    return value.toFixed(2).replace(/\.00$/,'');
+  }
+  function getCascadeForTotal(total){
+    const parts=[];let remain=Math.max(0,total);
+    while(remain>=2){parts.push(2);remain-=2;}
+    if(remain===1) parts.push(1);
+    return parts.join(' + ')||'—';
+  }
+  function calculateOrientationPlan(orientation,wallWidth,wallHeight,wallCount,res,overlapPct,targetCoverage,throwRatio){
+    const aspect=orientation==='horizontal'?res.w/res.h:res.h/res.w;
+    const fullHeightWidth=wallHeight*aspect;
+    const overlap=fullHeightWidth*overlapPct/100;
+    let perWall=1, imageWidth=0, imageHeight=0, overlapUsed=0, coveredWidth=0;
+    if(fullHeightWidth>=wallWidth){
+      // Single projector is scaled to fit within the wall; it does not overrun the wall edges.
+      imageWidth=wallWidth;
+      imageHeight=imageWidth/aspect;
+      overlapUsed=0;
+      coveredWidth=imageWidth;
+    }else{
+      const targetWidth=wallWidth*targetCoverage/100;
+      const stride=Math.max(0.0001,fullHeightWidth-overlap);
+      perWall=Math.max(1,Math.ceil((targetWidth-overlap)/stride));
+      perWall=Math.min(32,perWall);
+      imageWidth=fullHeightWidth;
+      imageHeight=wallHeight;
+      overlapUsed=overlap;
+      coveredWidth=perWall*imageWidth-(perWall-1)*overlapUsed;
+      // If the chosen count would exceed the wall width, scale all images down proportionally
+      // while preserving their aspect ratio and the configured overlap percentage.
+      if(coveredWidth>wallWidth){
+        const overlapFraction=overlapPct/100;
+        imageWidth=wallWidth/(perWall-(perWall-1)*overlapFraction);
+        imageHeight=imageWidth/aspect;
+        overlapUsed=imageWidth*overlapFraction;
+        coveredWidth=wallWidth;
+      }
+    }
+    const total=perWall*wallCount;
+    const units=Math.ceil(total/2);
+    const coveragePct=Math.min(100,coveredWidth/wallWidth*100);
+    const sideMargin=Math.max(0,(wallWidth-coveredWidth)/2);
+    const overfill=Math.max(0,coveredWidth-wallWidth);
+    const distance=Number.isFinite(throwRatio)&&throwRatio>0?imageWidth*throwRatio:null;
+    return {orientation,aspect,perWall,total,units,topology:getCascadeForTotal(total),imageWidth,imageHeight,overlap:overlapUsed,coveredWidth,coveragePct,sideMargin,overfill,centerSpacing:perWall>1?imageWidth-overlapUsed:null,distance,wallWidth,wallHeight,wallCount};
+  }
+  function renderOrientationCard(plan,recommended){
+    const title=plan.orientation==='horizontal'?'横投（横向画面）':'竖投（画面旋转90°）';
+    const verticalCoverage=plan.imageHeight/plan.wallHeight*100;
+    const distanceText=plan.distance===null?'未填写投射比':`${formatMeters(plan.distance)} m`;
+    const widthCoverage=plan.coveragePct.toFixed(1)+'%';
+    const imageSize=`${formatMeters(plan.imageWidth)} × ${formatMeters(plan.imageHeight)} m`;
+    const spacingText=plan.centerSpacing===null?'单台，无中心间距':`${formatMeters(plan.centerSpacing)} m`;
+    const fitNote=plan.overfill>0.01?`理论覆盖宽度超出墙宽 ${formatMeters(plan.overfill)} m，需裁切或缩放。`:plan.sideMargin>0.01?`两侧预计各留白 ${formatMeters(plan.sideMargin)} m。`:'横向覆盖按墙宽控制。';
+    return `<article class="orientation-card ${recommended?'recommended':''}">
+      <div class="orientation-head"><b>${title}</b><small>${recommended?'优先作为低设备数量基准':'用于比较画面覆盖与设备数量'} · ${plan.wallCount}面墙</small></div>
+      <div class="orientation-body">
+        <div class="orientation-main">${plan.total} 台投影机</div>
+        <div class="orientation-sub">每面 ${plan.perWall} 台 · 共 ${plan.total} 路输出 · 级联 ${plan.topology} · ${plan.units} 个融合单元</div>
+        <div class="orientation-stats">
+          <div class="mini-stat"><span>单台画面宽 × 高</span><b>${imageSize}</b></div>
+          <div class="mini-stat"><span>墙宽覆盖率</span><b>${widthCoverage}</b></div>
+          <div class="mini-stat"><span>画面高度覆盖率</span><b>${Math.min(100,verticalCoverage).toFixed(1)}%</b></div>
+          <div class="mini-stat"><span>理论镜头距离</span><b>${distanceText}</b></div>
+          <div class="mini-stat"><span>单处融合重叠</span><b>${plan.perWall>1?formatMeters(plan.overlap)+' m':'不需要'}</b></div>
+          <div class="mini-stat"><span>相邻画面中心间距</span><b>${spacingText}</b></div>
+        </div>
+        <div class="field-help">${fitNote}</div>
+      </div>
+    </article>`;
+  }
+  function gcd(a,b){while(b){const t=b;b=a%b;a=t;}return a||1;}
+  function calculateMediaCanvas(wallCount,projectorsPerWall,orientation,res,overlapPct){
+    const channelW=orientation==='horizontal'?res.w:res.h;
+    const channelH=orientation==='horizontal'?res.h:res.w;
+    const overlapPx=projectorsPerWall>1?Math.round(channelW*overlapPct/100):0;
+    const perWallW=projectorsPerWall*channelW-(projectorsPerWall-1)*overlapPx;
+    const perWallH=channelH;
+    const unfoldedW=perWallW*wallCount;
+    const unfoldedH=perWallH;
+    const divisor=gcd(unfoldedW,unfoldedH);
+    return {wallCount,projectorsPerWall,orientation,res,overlapPct,channelW,channelH,overlapPx,perWallW,perWallH,unfoldedW,unfoldedH,ratioW:unfoldedW/divisor,ratioH:unfoldedH/divisor,megapixels:unfoldedW*unfoldedH/1000000};
+  }
+  function renderDemandMediaCard(plan,wallCount,res,overlapPct){
+    const media=calculateMediaCanvas(wallCount,plan.perWall,plan.orientation,res,overlapPct);
+    const label=plan.orientation==='horizontal'?'横投方案':'竖投方案';
+    const overlapText=media.projectorsPerWall>1?`单处重叠约 ${media.overlapPx} px`:'每面仅1台，无拼接重叠';
+    return `<article class="media-option"><div class="media-option-head">${label} · 每面${plan.perWall}台</div><div class="media-option-body"><span class="field-help">单面墙有效画布</span><strong>${media.perWallW} × ${media.perWallH}</strong><p>多墙展开：${media.unfoldedW} × ${media.unfoldedH} px</p><p>${overlapText}；展开画布约 ${(media.unfoldedW/media.unfoldedH).toFixed(3)}:1</p></div></article>`;
+  }
+  function cascadeMediaGuidanceText(){
+    return `级联视频素材制作建议（简版）
+1. 统一时间轴：左右机/各象限素材来自同一源时间轴，帧率、总帧数、时长、起止点和播放列表顺序一致；不要混用25fps与30fps。
+2. 通用编码建议：优先MP4/H.264、25fps恒定帧率（CFR）、逐行、yuv420p 8-bit；同组素材尽量统一编码设置与关键帧位置。
+3. 1080P双通道/2+2一字形参考：单机画布3840×1080；内置存储目标12–14Mbps，USB目标10–12Mbps且单独复验；GOP50（约2秒），连续B帧≤2。
+4. 4K田字形/2+2级联阶段候选：3840×2160、H.264 Level 5.1、25fps CFR、目标约10Mbps、VBV maxrate 12Mbps、GOP50、B帧0、参考帧1；须核对实际文件并上机复测，不是通用认证标准。
+5. 验收顺序：先单机连续播放，再测双机冷启动、同步起播、文件切换与循环，记录卡顿时间点和异常次数。
+边界：编码一致不等于硬件帧同步；不能据此承诺零卡顿、无缝切换或帧精确同步。1920×1200样机、不同型号/固件及USB/内置存储路径须分别验证。`;
+  }
+  function calculateMedia(){
+    if(currentMode!=='media') return;
+    const wallCount=Math.max(1,Math.min(6,parseInt(document.getElementById('mediaWallCount').value,10)||3));
+    const projectorsPerWall=Math.max(1,Math.min(16,parseInt(document.getElementById('mediaProjectorsPerWall').value,10)||1));
+    document.getElementById('mediaWallCount').value=wallCount;
+    document.getElementById('mediaProjectorsPerWall').value=projectorsPerWall;
+    const orientation=document.getElementById('mediaOrientation').value==='vertical'?'vertical':'horizontal';
+    const overlapPct=Math.max(0,Math.min(40,parseFloat(document.getElementById('mediaOverlapPct').value)||0));
+    document.getElementById('mediaOverlapPct').value=overlapPct;
+    const res=getResolution();
+    const m=calculateMediaCanvas(wallCount,projectorsPerWall,orientation,res,overlapPct);
+    const orientationLabel=orientation==='horizontal'?'横投':'竖投（旋转90°）';
+    document.getElementById('mediaSummary').textContent=`${wallCount}面同尺寸墙，每面${projectorsPerWall}台投影机，${orientationLabel}；单通道原始输出为 ${orientation==='horizontal'?res.label:`${res.h}×${res.w}`}。设定融合重叠率 ${overlapPct}%，每处理论重叠 ${m.overlapPx} px。计算结果为逻辑素材画布，非播放服务器输入时序的保证值。`;
+    document.getElementById('mediaPerWall').textContent=`${m.perWallW} × ${m.perWallH}`;
+    document.getElementById('mediaPerWallNote').textContent=`每面${projectorsPerWall}台；${m.overlapPx?`重叠${m.overlapPx}px`:'无拼接重叠'}`;
+    document.getElementById('mediaUnfolded').textContent=`${m.unfoldedW} × ${m.unfoldedH}`;
+    document.getElementById('mediaUnfoldedNote').textContent=`${wallCount}面墙线性展开，不含墙角补偿`;
+    document.getElementById('mediaAspect').textContent=`${(m.unfoldedW/m.unfoldedH).toFixed(3)}:1`;
+    document.getElementById('mediaMegapixels').textContent=`${m.megapixels.toFixed(2)} MP`;
+    document.getElementById('mediaWallPill').textContent=`${wallCount}面墙`;
+    document.getElementById('mediaWallList').innerHTML=Array.from({length:wallCount},(_,i)=>`<div class="media-wall"><b>墙面 ${i+1}</b>${m.perWallW} × ${m.perWallH} px<br>${projectorsPerWall}台投影机 · ${orientationLabel}</div>`).join('');
+    lastPlan=`Sipa视频素材分辨率理论计算建议
+墙面数量：${wallCount}面（假设尺寸相同）
+每面墙投影机数量：${projectorsPerWall}台
+投影方向：${orientationLabel}
+单通道原始输出：${orientation==='horizontal'?res.label:`${res.h}×${res.w}`}
+融合重叠率：${overlapPct}%
+单处理论重叠：${m.overlapPx} px
+
+单面墙逻辑素材画布：${m.perWallW} × ${m.perWallH} px
+多墙线性展开画布：${m.unfoldedW} × ${m.unfoldedH} px
+展开画布宽高比：${(m.unfoldedW/m.unfoldedH).toFixed(3)}:1
+总像素量：${m.megapixels.toFixed(2)} MP
+
+各墙交付建议：
+${Array.from({length:wallCount},(_,i)=>`墙面${i+1}：${m.perWallW} × ${m.perWallH} px（每墙独立交付时）`).join('\n')}
+
+计算假设：每路投影机使用所选原生分辨率；竖投时按画面旋转90°交换宽高；拼接方向的重叠像素按单通道有效宽度×重叠率计算；每面墙尺寸和投影机数量相同。多墙展开画布仅为线性拼接估算，不含墙角几何补偿、额外裁切或不同墙面比例修正。
+
+交付前必须确认：融合软件的逻辑画布定义、播放服务器输入分辨率与输出映射、墙角内容处理、视频编码/帧率/色彩格式及音视频同步。此结果不能直接替代播放服务器的实际输出时序。
+
+${cascadeMediaGuidanceText()}`;
+    document.getElementById('mediaPlanText').textContent=lastPlan;
+  }
+  function calculateDemand(){
+    if(currentMode!=='demand') return;
+    const wallCount=Math.max(1,Math.min(6,parseInt(document.getElementById('wallCount').value,10)||3));
+    const wallWidth=parseFloat(document.getElementById('wallWidth').value);
+    const wallHeight=parseFloat(document.getElementById('wallHeight').value);
+    const overlapPct=Math.max(0,Math.min(40,parseFloat(document.getElementById('overlapPct').value)||0));
+    const targetCoverage=Math.max(90,Math.min(100,parseInt(document.getElementById('targetCoverage').value,10)||90));
+    const ratioRaw=document.getElementById('throwRatio').value.trim();
+    const throwRatio=ratioRaw===''?null:parseFloat(ratioRaw);
+    if(!Number.isFinite(wallWidth)||wallWidth<0.5||wallWidth>100||!Number.isFinite(wallHeight)||wallHeight<0.5||wallHeight>20){
+      document.getElementById('demandSummary').textContent='请输入有效墙面尺寸：墙宽0.5–100m，墙高0.5–20m。';
+      document.getElementById('demandCompare').innerHTML='';document.getElementById('demandWallBreakdown').innerHTML='';document.getElementById('demandMediaResults').innerHTML='';
+      lastPlan='请输入有效墙面尺寸后再生成方案。';document.getElementById('demandPlanText').textContent=lastPlan;return;
+    }
+    const res=getResolution();
+    const landscape=calculateOrientationPlan('horizontal',wallWidth,wallHeight,wallCount,res,overlapPct,targetCoverage,throwRatio);
+    const portrait=calculateOrientationPlan('vertical',wallWidth,wallHeight,wallCount,res,overlapPct,targetCoverage,throwRatio);
+    // Prefer fewer projectors as the initial budget baseline; present the higher-coverage alternative alongside it.
+    const preferred=landscape.total<=portrait.total?landscape:portrait;
+    const targetText=`${targetCoverage}%`;
+    document.getElementById('demandSummary').innerHTML=`相同尺寸墙面 ${wallCount} 面；每面 ${formatMeters(wallWidth)} m（宽）× ${formatMeters(wallHeight)} m（高）。单通道输出 ${res.label}，融合重叠率 ${overlapPct}%，目标墙宽覆盖率 ${targetText}。${throwRatio===null||!Number.isFinite(throwRatio)||throwRatio<=0?'投射比尚未填写，因此暂不计算镜头距离。':`输入投射比为 ${throwRatio.toFixed(2)}:1，距离按画面宽度×投射比估算。`}${Math.max(landscape.total,portrait.total)>32?' 注意：某个方案超过32路输出，超出当前计算器常规通道输入范围，须单独做工程核算。':''}`;
+    document.getElementById('demandCompare').innerHTML=renderOrientationCard(landscape,preferred===landscape)+renderOrientationCard(portrait,preferred===portrait);
+    document.getElementById('demandMediaResults').innerHTML=renderDemandMediaCard(landscape,wallCount,res,overlapPct)+renderDemandMediaCard(portrait,wallCount,res,overlapPct);
+    const rows=[];
+    for(let wall=1;wall<=wallCount;wall++){
+      const first=(wall-1)*preferred.perWall+1,last=wall*preferred.perWall;
+      const channelLabel=first===last?`CH${first}`:`CH${first}–CH${last}`;
+      rows.push(`<div class="wall-row"><span>墙面 ${wall} · ${preferred.orientation==='horizontal'?'横投':'竖投'} · ${preferred.perWall} 台</span><b>${channelLabel}</b></div>`);
+    }
+    document.getElementById('demandWallBreakdown').innerHTML=rows.join('');
+    const ratioLine=throwRatio===null||!Number.isFinite(throwRatio)||throwRatio<=0?'投射比：未填写，需输入实际机型投射比后计算距离。':`投射比：${throwRatio.toFixed(2)}:1。${preferred.orientation==='horizontal'?'横投':'竖投'}理论镜头距离约 ${formatMeters(preferred.distance)} m。`;
+    const landscapeLine=`横投：每面 ${landscape.perWall} 台，共 ${landscape.total} 台；画面约 ${formatMeters(landscape.imageWidth)} × ${formatMeters(landscape.imageHeight)} m；级联 ${landscape.topology}；融合单元 ${landscape.units} 个；墙宽覆盖率 ${landscape.coveragePct.toFixed(1)}%。`;
+    const portraitLine=`竖投：每面 ${portrait.perWall} 台，共 ${portrait.total} 台；画面约 ${formatMeters(portrait.imageWidth)} × ${formatMeters(portrait.imageHeight)} m；级联 ${portrait.topology}；融合单元 ${portrait.units} 个；墙宽覆盖率 ${portrait.coveragePct.toFixed(1)}%。`;
+    const preferredLine=`设备数量较少的初步预算基准：${preferred.orientation==='horizontal'?'横投':'竖投'}，共 ${preferred.total} 台投影机，融合结构 ${preferred.topology}，${preferred.units} 个融合单元。此项只按设备数量选为基准，不代表最终画质或安装条件一定更优。`;
+    lastPlan=`Sipa融合器与投影机理论选型方案（尺寸反推）\n墙面数量：${wallCount}面（尺寸相同）\n每面墙尺寸：${formatMeters(wallWidth)} m × ${formatMeters(wallHeight)} m\n单通道输出分辨率：${res.label}\n融合重叠率：${overlapPct}%\n目标墙宽覆盖率：${targetCoverage}%\n\n${landscapeLine}\n${portraitLine}\n\n${preferredLine}\n${ratioLine}\n\n通道分配（按初步预算基准）：\n${rows.map((_,i)=>{const first=i*preferred.perWall+1,last=(i+1)*preferred.perWall;return `墙面${i+1}：${first===last?'CH'+first:'CH'+first+'–CH'+last}（${preferred.perWall}台）`;}).join('\n')}\n\n计算假设：同尺寸墙面使用相同投影机数量；画面比例按所选单通道分辨率横投/旋转90°竖投；单台画面优先按墙高计算，若单台宽度超过墙宽则缩放至墙宽；融合重叠按单幅画面宽度的设定百分比估算。\n现场复核：投射比及变焦范围、机身与吊装空间、竖装与散热、融合映射和画面旋转能力、内容比例、边缘裁切与现场遮挡。此方案为理论粗算，不是施工图。`;
+    const mediaLandscape=calculateMediaCanvas(wallCount,landscape.perWall,'horizontal',res,overlapPct);
+    const mediaPortrait=calculateMediaCanvas(wallCount,portrait.perWall,'vertical',res,overlapPct);
+    lastPlan+=`\n\n视频素材分辨率估算：\n横投方案：每面${landscape.perWall}台，单墙逻辑画布 ${mediaLandscape.perWallW}×${mediaLandscape.perWallH} px；${wallCount}面线性展开 ${mediaLandscape.unfoldedW}×${mediaLandscape.unfoldedH} px。\n竖投方案：每面${portrait.perWall}台，单墙逻辑画布 ${mediaPortrait.perWallW}×${mediaPortrait.perWallH} px；${wallCount}面线性展开 ${mediaPortrait.unfoldedW}×${mediaPortrait.unfoldedH} px。\n说明：多墙展开画布不含墙角几何补偿；实际素材画布须与播放服务器、融合软件及内容映射流程确认。
+
+${cascadeMediaGuidanceText()}`;
+    document.getElementById('demandPlanText').textContent=lastPlan;
+  }
+
+  function updateCanvasEstimate(){
+    const channels=getChannels().length;
+    const res=getResolution();
+    const axis=document.getElementById('canvasAxis').value;
+    const overlapEl=document.getElementById('overlapPx');
+    const maxOverlap=(axis==='horizontal'?res.w:res.h)-1;
+    overlapEl.max=maxOverlap;
+    let overlap=parseInt(overlapEl.value,10);
+    if(!Number.isFinite(overlap)||overlap<0) overlap=0;
+    overlap=Math.min(maxOverlap,overlap);
+    overlapEl.value=overlap;
+    if(channels<1){document.getElementById('canvasResult').textContent='请先配置至少1路输出。';return;}
+    let w=res.w,h=res.h;
+    if(axis==='horizontal') w=channels*res.w-(channels-1)*overlap;
+    else h=channels*res.h-(channels-1)*overlap;
+    document.getElementById('canvasResult').textContent=`估算画布：${w} × ${h} px（${channels}路，重叠 ${overlap} px）`;
+  }
+  async function copyPlan(){
+    const status=document.getElementById(currentMode==='demand'?'demandCopyStatus':currentMode==='media'?'mediaCopyStatus':'copyStatus');
+    try{
+      if(navigator.clipboard && window.isSecureContext) await navigator.clipboard.writeText(lastPlan);
+      else {
+        const ta=document.createElement('textarea');ta.value=lastPlan;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();const ok=document.execCommand('copy');ta.remove();if(!ok) throw new Error('copy failed');
+      }
+      status.textContent='已复制，可粘贴发送';
+    }catch(e){status.textContent='复制未成功，请手动选择下方方案文本';}
+  }
+  function downloadPlan(){
+    const blob=new Blob(['\ufeff'+lastPlan],{type:'text/plain;charset=utf-8'});
+    const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=currentMode==='media'?'Sipa视频素材分辨率建议.txt':currentMode==='demand'?'Sipa融合器尺寸反推方案.txt':'Sipa融合器选型方案.txt';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+    document.getElementById(currentMode==='demand'?'demandCopyStatus':currentMode==='media'?'mediaCopyStatus':'copyStatus').textContent='方案 TXT 已生成';
+  }
+  function resetAll(){
+    currentMode='scene';currentScene='floor';currentResolution='1200';surfaceCounts={...DEFAULT_COUNTS};channelCount=5;
+    document.getElementById('channelCount').value=5;
+    document.getElementById('canvasAxis').value='horizontal';document.getElementById('overlapPx').value=0;
+    document.getElementById('copyStatus').textContent='';
+    document.getElementById('sceneMode').classList.remove('hidden');document.getElementById('channelMode').classList.add('hidden');document.getElementById('demandMode').classList.add('hidden');document.getElementById('mediaMode').classList.add('hidden');
+    document.getElementById('legacyResults').classList.remove('hidden');document.getElementById('demandResults').classList.add('hidden');document.getElementById('mediaResults').classList.add('hidden');
+    document.getElementById('modeSceneBtn').classList.add('active');document.getElementById('modeChannelBtn').classList.remove('active');document.getElementById('modeDemandBtn').classList.remove('active');document.getElementById('modeMediaBtn').classList.remove('active');
+    document.getElementById('wallCount').value='3';document.getElementById('wallWidth').value='3.95';document.getElementById('wallHeight').value='3.3';document.getElementById('throwRatio').value='';document.getElementById('overlapPct').value='15';document.getElementById('targetCoverage').value='90';document.getElementById('demandCopyStatus').textContent='';document.getElementById('mediaWallCount').value='3';document.getElementById('mediaProjectorsPerWall').value='2';document.getElementById('mediaOrientation').value='vertical';document.getElementById('mediaOverlapPct').value='15';document.getElementById('mediaCopyStatus').textContent='';
+    document.querySelectorAll('[data-scene]').forEach(el=>el.classList.toggle('active',el.dataset.scene===currentScene));
+    document.getElementById('res1080').classList.remove('active');document.getElementById('res1200').classList.add('active');
+    renderSurfaceControls();calculate();
+  }
+  document.getElementById('channelCount').addEventListener('input',calculate);
+  if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}
+  window.addEventListener('load',()=>{renderSurfaceControls();calculate();});
+</script>
+</body>
+</html>
