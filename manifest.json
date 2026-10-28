@@ -1,6 +1,6 @@
 {
   "name": "融合级联计算器",
-  "short_name": "融合级联",
+  "short_name": "融合级联计算",
   "description": "融合级联选型、墙面尺寸反推、视频素材画布与级联播放素材建议工具",
   "start_url": "./index.html",
   "scope": "./",

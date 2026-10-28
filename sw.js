@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sipa-fusion-v34-cache';
+const CACHE_NAME = 'sipa-fusion-v35-cache';
 const CORE_ASSETS = [
   './',
   './index.html',
