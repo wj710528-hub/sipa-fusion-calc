@@ -8,12 +8,12 @@
   <link rel="manifest" href="./manifest.json">
   <link rel="icon" href="./icon-192.png">
   <link rel="apple-touch-icon" href="./icon-192.png">
-  <title>融合级联计算器 V3.1</title>
+  <title>融合级联计算器 V3.2</title>
   <style>
     :root{--brand:#c9272c;--blue:#1769aa;--orange:#ef7b22;--bg:#f2f5f9;--card:#fff;--line:#dfe6ee;--text:#202b38;--muted:#667085;--soft:#f8fafc;--shadow:0 10px 28px rgba(22,34,51,.075)}
     *{box-sizing:border-box}html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,"PingFang SC","Microsoft YaHei",sans-serif}button,input,select{font:inherit}button{touch-action:manipulation;cursor:pointer}
     .wrap{max-width:1120px;margin:0 auto;padding:max(12px,env(safe-area-inset-top)) 12px calc(22px + env(safe-area-inset-bottom))}.shell{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:var(--shadow)}
-    .header{display:flex;align-items:center;gap:12px;padding:15px 17px;border-bottom:1px solid var(--line);background:linear-gradient(130deg,#fff,#fbfcfe)}.logo{width:55px;height:55px;object-fit:contain;border-radius:12px;background:#fff;flex-shrink:0}.brand-copy{flex:1;min-width:0}.brand-copy h1{font-size:20px;line-height:1.2;margin:0;font-weight:900;letter-spacing:.1px}.brand-copy p{margin:5px 0 0;font-size:12px;line-height:1.4;color:var(--muted)}.version{padding:6px 10px;background:#fff0f0;color:var(--brand);border:1px solid #ffd4d4;border-radius:999px;font-size:11px;font-weight:900;white-space:nowrap}
+    .header{display:flex;align-items:center;gap:12px;padding:15px 17px;border-bottom:1px solid var(--line);background:linear-gradient(130deg,#fff,#fbfcfe)}.logo{width:104px;height:39px;object-fit:contain;border-radius:0;background:transparent;flex-shrink:0}.brand-copy{flex:1;min-width:0}.brand-copy h1{font-size:20px;line-height:1.2;margin:0;font-weight:900;letter-spacing:.1px}.brand-copy p{margin:5px 0 0;font-size:12px;line-height:1.4;color:var(--muted)}.version{padding:6px 10px;background:#fff0f0;color:var(--brand);border:1px solid #ffd4d4;border-radius:999px;font-size:11px;font-weight:900;white-space:nowrap}
     .layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:13px;padding:13px}.panel{min-width:0;border:1px solid var(--line);border-radius:15px;padding:14px;background:#fff}.section-head{display:flex;align-items:center;gap:8px;margin:0 0 12px;font-size:15px;font-weight:900}.step{display:inline-flex;align-items:center;justify-content:center;width:25px;height:25px;border-radius:8px;background:#fff0f0;color:var(--brand);font-size:11px;font-weight:950}.section-title{font-size:12px;color:#344054;font-weight:850;margin:14px 0 8px}.section-title:first-of-type{margin-top:0}
     .mode-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-bottom:12px}.mode-tab{min-height:43px;border:1px solid var(--line);border-radius:10px;background:#fff;color:#344054;font-size:11px;line-height:1.35;font-weight:850;padding:7px 5px}.mode-tab.active{background:var(--blue);color:#fff;border-color:var(--blue);box-shadow:0 5px 13px rgba(23,105,170,.16)}
     .scene-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.scene-card{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;text-align:left;gap:4px;min-height:68px;border:1px solid var(--line);border-radius:11px;padding:10px;background:#fff;color:#273647}.scene-card b{font-size:12px;font-weight:900}.scene-card small{font-size:10px;color:var(--muted);line-height:1.35}.scene-card.active{border-color:var(--blue);background:#edf6fc;box-shadow:inset 0 0 0 1px var(--blue)}.scene-card.active small{color:#38698d}
@@ -27,16 +27,16 @@
     .media-rule-list{margin:0;padding-left:18px;font-size:11px;line-height:1.65;color:#344054}.media-rule-list li{margin:0 0 7px}.media-rule-list li:last-child{margin-bottom:0}.media-spec-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:9px}.media-spec-card{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;min-width:0}.media-spec-card h4{font-size:11px;margin:0;padding:9px 10px;background:#f7f9fb;border-bottom:1px solid var(--line)}.media-spec-card p{font-size:10.5px;line-height:1.55;color:#536171;margin:0;padding:9px 10px}.media-spec-card b{color:#1769aa}.media-rule-foot{font-size:10.5px;line-height:1.6;color:#66512c;background:#fff9ed;border:1px solid #f0dfbc;border-radius:9px;padding:9px 10px;margin-top:9px}
     .hidden{display:none!important}
     @media(max-width:850px){.layout{grid-template-columns:1fr}.result-panel{order:2}.input-panel{order:1}}
-    @media(max-width:480px){.mode-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}.media-pair{grid-template-columns:1fr}.demand-fields{grid-template-columns:1fr 1fr}.demand-results-grid{grid-template-columns:1fr}.wrap{padding-left:7px;padding-right:7px}.header{padding:12px;gap:9px}.logo{width:47px;height:47px}.brand-copy h1{font-size:17px}.brand-copy p{font-size:10px}.version{font-size:10px;padding:5px 7px}.layout{padding:8px;gap:9px}.panel{padding:10px}.scene-grid{gap:6px}.scene-card{min-height:64px;padding:8px}.scene-card b{font-size:11px}.surface-grid{gap:6px}.surface-card{padding:8px}.kpi strong{font-size:23px}.kpi.highlight strong{font-size:24px}.channel-list{grid-template-columns:1fr}.room-diagram{min-height:205px;padding:10px}.room-inner{height:180px}.fields{grid-template-columns:1fr 1fr}.plan-actions{align-items:stretch}.plan-actions .btn{flex:1}.copy-status{width:100%}}
+    @media(max-width:480px){.mode-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}.media-pair{grid-template-columns:1fr}.demand-fields{grid-template-columns:1fr 1fr}.demand-results-grid{grid-template-columns:1fr}.wrap{padding-left:7px;padding-right:7px}.header{padding:12px;gap:9px}.logo{width:72px;height:27px}.brand-copy h1{font-size:17px}.brand-copy p{font-size:10px}.version{font-size:10px;padding:5px 7px}.layout{padding:8px;gap:9px}.panel{padding:10px}.scene-grid{gap:6px}.scene-card{min-height:64px;padding:8px}.scene-card b{font-size:11px}.surface-grid{gap:6px}.surface-card{padding:8px}.kpi strong{font-size:23px}.kpi.highlight strong{font-size:24px}.channel-list{grid-template-columns:1fr}.room-diagram{min-height:205px;padding:10px}.room-inner{height:180px}.fields{grid-template-columns:1fr 1fr}.plan-actions{align-items:stretch}.plan-actions .btn{flex:1}.copy-status{width:100%}}
   </style>
 </head>
 <body>
   <div class="wrap">
     <main class="shell">
       <header class="header">
-        <img class="logo" src="./icon-192.png" alt="Sipa">
+        <img class="logo" src="./header-logo.png" alt="Sipa">
         <div class="brand-copy"><h1>融合级联计算器</h1><p>应用场景 · 尺寸反推 · 素材分辨率 · 级联组合</p></div>
-        <span class="version">V3.1</span>
+        <span class="version">V3.2</span>
       </header>
       <div class="layout">
         <section class="panel input-panel">
@@ -175,7 +175,7 @@
           </div>
         </section>
       </div>
-      <div class="footer">Sipa融合系统工程选型辅助工具 · Powered by Sipa · V3.1</div>
+      <div class="footer">Sipa融合系统工程选型辅助工具 · Powered by Sipa · V3.2</div>
     </main>
   </div>
 <script>
